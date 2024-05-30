@@ -1,0 +1,113 @@
+/* Layout.css */
+
+body {
+    background-color: #121212; /* Dark background */
+    color: #e0e0e0;             /* Light gray text */
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #f5f5f5; /* Slightly brighter heading */
+  }
+  
+  button[type="btn"] {
+    background-color: #222;  /* Darker button background */
+    color: #e0e0e0;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button[type="btn"]:active {
+    background-color: #444; /* Even lighter on active */
+  }
+  
+  .fc {
+    background-color: #181818; /* Darker calendar background */
+    color: #e0e0e0;
+    border: none;
+  }
+  .fc-daygrid-day-number { /* Target the day number element */
+    color: #4d8ded; /* Set the color to a lighter gray for better contrast */
+  }
+  .fc-toolbar {
+    background-color: #222;  /* Darker toolbar */
+    border: none;
+  }
+  
+  
+  .fc .fc-button:active {
+    background-color: #555;
+  }
+  
+  .fc-daygrid-day {
+    border: 1px solid #222; /* Very subtle border */
+  }
+  
+  .fc-day-today {
+    background-color: #282828 !important; /* Subtle highlight for today */
+  }
+  
+  .fc-event {
+    background-color: #333; /* Darker event background */
+    color: #4be28ab4;
+    border: 1px solid #444; /* Darker border */
+    transition: background-color 0.3s;
+  }
+.fc-container {
+  width: 100%;
+  height: calc(100vh - 100px); /* Adjust height based on your layout */
+  max-width: 1800px;
+  margin: 0 auto;
+}
+.fc-list-event:hover {
+    background-color: inherit !important; /* Keep the background color the same on hover */
+    cursor: pointer; /* Optionally, keep the pointer cursor */
+}
+@media (max-width: 768px) {
+  .fc-toolbar h2 {
+    font-size: 1.5rem;
+  }
+
+  button[type="btn"] {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+  }
+
+  .fc {
+    font-size: 0.875rem;
+  }
+
+  .fc-container {
+    height: calc(100vh - 80px); /* Adjust for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .fc-toolbar h2 {
+    font-size: 1.25rem;
+  }
+
+  button[type="btn"] {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+
+  .fc {
+    font-size: 0.75rem;
+  }
+
+  .fc-container {
+    height: calc(100vh - 60px); /* Adjust for smallest screens */
+  }
+}

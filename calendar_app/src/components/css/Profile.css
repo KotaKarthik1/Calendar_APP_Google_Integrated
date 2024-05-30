@@ -1,0 +1,20 @@
+.profile-container {
+    display: flex;           /* Enable flexbox for centering */
+    flex-direction: column;  /* Align items vertically */
+    justify-content: center; /* Center items vertically */
+    align-items: center;     /* Center items horizontally */
+    min-height: 100vh;       /* Make container at least full viewport height */
+    background-color: #222;  /* Dark background color */
+    color: white;            /* Light text color for contrast */
+    padding: 20px;
+  }
+  
+  .profile-container h2 {
+    /* margin-bottom: 10px; */
+    font-size: 2.5rem;        /* Larger font size for the heading */
+  }
+  
+  .profile-container p {
+    font-size: 1.2rem;        /* Slightly larger font size for the email */
+  }
+  
