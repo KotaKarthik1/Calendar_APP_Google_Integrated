@@ -55,11 +55,10 @@ const app = express();
 // Resolve CORS with credentials support
 app.use(
   cors({
-    origin: [config.clientUrl],
     credentials: true,
-
   })
 );
+
 app.use(bodyParser.json());
 console.log(config.clientUrl);
 console.log("CORS configured with origin:", config.clientUrl);
