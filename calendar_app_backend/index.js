@@ -55,6 +55,8 @@ const app = express();
 // Resolve CORS with credentials support
 app.use(
   cors({
+    origin: [process.env.CLIENT_URL],
+        methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
