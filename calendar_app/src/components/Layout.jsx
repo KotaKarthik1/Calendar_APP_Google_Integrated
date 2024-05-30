@@ -54,6 +54,20 @@ export default function LayoutComponent({ AuthContext }) {
       });
     }
   };
+  const handleEventDelete = async (eventId) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/delete-event/${eventId}/${user.email}`);
+      if(response.data.status=="ok"){
+          setEvents((prevEvents) => prevEvents.filter(event => event.id !== eventId));
+        setShowPopup(false); // Close the popup after deleting
+      }
+      
+      
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      // Handle errors (e.g., display an error message to the user)
+    }
+  };
 
   const handleDateClick = (info) => {
     const clickedDate = info.dateStr;
@@ -111,7 +125,7 @@ export default function LayoutComponent({ AuthContext }) {
         )}
       />
       {showPopup && selectedEvent && (
-        <EventPopup events={selectedEvent} onClose={() => setShowPopup(false)} />
+        <EventPopup events={selectedEvent} onClose={() => setShowPopup(false)} onDelete={handleEventDelete} />
       )}
     </div>
   );

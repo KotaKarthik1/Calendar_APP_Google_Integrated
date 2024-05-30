@@ -71,7 +71,12 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #47b2d9;
 }
-
+.success-message {
+  color: #4caf50; /* Green color for success message */
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 20px;
+}
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) { 
   .event-form-container {
@@ -88,6 +93,10 @@ button[type="submit"]:hover {
   label {
     font-size: 1rem;
   }
+  .success-message {
+    background-color: #4caf50;
+    font-size: 1rem;
+  }
 }
 
 @media (max-width: 480px) { 
@@ -101,5 +110,8 @@ button[type="submit"]:hover {
   textarea {
     font-size: 0.9rem;
     padding: 8px;
+  }
+  .success-message {
+    font-size: 0.9rem;
   }
 }

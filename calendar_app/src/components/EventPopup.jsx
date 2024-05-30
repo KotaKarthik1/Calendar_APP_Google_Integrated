@@ -1,7 +1,7 @@
 import React from "react";
 import { DateTime } from "luxon";
 
-function EventPopup({ events, onClose }) {
+function EventPopup({ events, onClose, onDelete  }) {
     console.log(events[0]);
   const formatDateTime = (dateTimeString, timezone = 'local') => {
     // console.log(dateTimeString);
@@ -72,6 +72,15 @@ function EventPopup({ events, onClose }) {
         >
           Close
         </button>
+        <button style={{
+            marginTop: "15px",
+            padding: "8px 12px",
+            backgroundColor: "white", // White button
+            color: "black",
+            border: "1px solid #333", // Dark gray border
+            borderRadius: "5px",
+            cursor: "pointer",
+          }} onClick={() => onDelete(events[0].id)}>Delete</button>
       </div>
     </div>
   );

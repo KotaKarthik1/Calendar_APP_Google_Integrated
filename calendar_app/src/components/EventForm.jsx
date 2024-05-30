@@ -15,6 +15,7 @@ function EventForm({ AuthContext }) {
   const [eventDescription, setEventDescription] = useState("");
   const [eventStart, setEventStart] = useState("");
   const [eventEnd, setEventEnd] = useState("");
+  const [eventCreated, setEventCreated] = useState(false); // State to track event creation
 
   useEffect(() => {
     if (selectedDate) {
@@ -54,7 +55,10 @@ function EventForm({ AuthContext }) {
       );
 
       console.log("Event added successfully:", response.data);
-      navigate("/");
+      setEventCreated(true); // Set eventCreated to true when event is added successfully
+      setTimeout(() => {
+        navigate("/");
+      }, 2000); // Redirect after 2 seconds
     } catch (error) {
       console.error("Error adding event:", error);
       if (
@@ -116,6 +120,7 @@ function EventForm({ AuthContext }) {
 
         <button type="submit">Create Event</button>
       </form>
+      {eventCreated && <p className="success-message">Event created successfully!</p>} {/* Success message */}
     </div>
   );
 }
