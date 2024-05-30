@@ -19,7 +19,9 @@ const AuthContextProvider = ({ children }) => {
     try {
       const {
         data: { loggedIn: logged_in, user }
-      } = await axios.get(`http://localhost:5000/auth/logged_in`)
+      } = await axios.get(`https://calendar-app-google-integrated.vercel.app/auth/logged_in`,
+      { withCredentials: true }
+      )
       setLoggedIn(logged_in)
       user && setUser(user)
     } catch (err) {

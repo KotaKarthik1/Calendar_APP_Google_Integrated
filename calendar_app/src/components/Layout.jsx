@@ -25,7 +25,9 @@ export default function LayoutComponent({ AuthContext }) {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/calendar-events/${user.email}`);
+        const response = await axios.get(`https://calendar-app-google-integrated.vercel.app/calendar-events/${user.email}`,
+        { withCredentials: true }
+        );
         const formattedEvents = response.data.map(event => ({
           id: event.id,
           title: event.summary,
@@ -45,7 +47,9 @@ export default function LayoutComponent({ AuthContext }) {
 
   const logoutHandler = () => {
     if (window.confirm("Are you sure you want to logout?")) {
-      axios.post('http://localhost:5000/auth/logout')
+      axios.post('https://calendar-app-google-integrated.vercel.app/auth/logout',
+      { withCredentials: true }
+      )
       .then(() => {
         window.location.reload();
       })
@@ -56,7 +60,9 @@ export default function LayoutComponent({ AuthContext }) {
   };
   const handleEventDelete = async (eventId) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/delete-event/${eventId}/${user.email}`);
+      const response = await axios.delete(`https://calendar-app-google-integrated.vercel.app/delete-event/${eventId}/${user.email}`,
+      { withCredentials: true }
+      );
       if(response.data.status=="ok"){
           setEvents((prevEvents) => prevEvents.filter(event => event.id !== eventId));
         setShowPopup(false); // Close the popup after deleting

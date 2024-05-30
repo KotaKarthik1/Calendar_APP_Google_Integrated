@@ -57,10 +57,11 @@ app.use(
   cors({
     origin: [config.clientUrl],
     credentials: true,
+
   })
 );
 app.use(bodyParser.json());
-
+console.log(config.clientUrl);
 console.log("CORS configured with origin:", config.clientUrl);
 
 // Middleware to parse cookies
@@ -326,11 +327,11 @@ app.delete("/delete-event/:eventId/:email", auth, async (req, res) => {
     const DBRefreshToekn = dbUser.refreshToken;
 
     oauth2Client.setCredentials({ refresh_token: DBRefreshToekn });
-    const calendar = google.calendar({ version: "v3"});
+    const calendar = google.calendar({ version: "v3" });
 
     const event = await calendar.events.delete({
       calendarId: "primary",
-      auth: oauth2Client ,
+      auth: oauth2Client,
       eventId,
     });
     // Remove from DB

@@ -7,7 +7,9 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     // Navigate to Google OAuth URL
-    const { data: { url } } = await axios.get('http://localhost:5000/auth/url');
+    const { data: { url } } = await axios.get('https://calendar-app-google-integrated.vercel.app/auth/url',
+    { withCredentials: true }
+    );
     window.location.assign(url);
   };
   return (

@@ -50,8 +50,9 @@ function EventForm({ AuthContext }) {
       };
 
       const response = await axios.post(
-        `http://localhost:5000/schedule-event/${user.email}`,
-        requestBody
+        `https://calendar-app-google-integrated.vercel.app/schedule-event/${user.email}`,
+        requestBody,
+        { withCredentials: true }
       );
 
       console.log("Event added successfully:", response.data);
