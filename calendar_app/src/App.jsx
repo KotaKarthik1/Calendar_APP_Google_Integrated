@@ -19,15 +19,17 @@ const AuthContextProvider = ({ children }) => {
     try {
       const {
         data: { loggedIn: logged_in, user }
-      } = await axios.get(`https://calendar-app-google-integrated.vercel.app/auth/logged_in`,
-      { withCredentials: true }
+      } = await axios.get(`https://calendar-app-google-integrated.vercel.app/auth/logged_in`
       )
       setLoggedIn(logged_in)
       user && setUser(user)
     } catch (err) {
-      console.error(err)
+      // Reset logged in state on error
+      setLoggedIn(false); // Ensure logged in state is reset if error
+      setUser(null);      // Ensure user is reset if error
+      console.error(err);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     checkLoginState()
@@ -38,6 +40,7 @@ const AuthContextProvider = ({ children }) => {
 
 const Home = () => {  
   const { loggedIn } = useContext(AuthContext)  
+  console.log(loggedIn);
   if (loggedIn === true) return <Layout AuthContext={AuthContext} />
   if (loggedIn === false) return <Login />
   return <></>

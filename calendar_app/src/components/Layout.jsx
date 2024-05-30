@@ -25,8 +25,7 @@ export default function LayoutComponent({ AuthContext }) {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(`https://calendar-app-google-integrated.vercel.app/calendar-events/${user.email}`,
-        { withCredentials: true }
+        const response = await axios.get(`https://calendar-app-google-integrated.vercel.app/calendar-events/${user.email}`
         );
         const formattedEvents = response.data.map(event => ({
           id: event.id,
@@ -47,8 +46,7 @@ export default function LayoutComponent({ AuthContext }) {
 
   const logoutHandler = () => {
     if (window.confirm("Are you sure you want to logout?")) {
-      axios.post('https://calendar-app-google-integrated.vercel.app/auth/logout',
-      { withCredentials: true }
+      axios.post(`https://calendar-app-google-integrated.vercel.app/auth/logout/${user.email}`
       )
       .then(() => {
         window.location.reload();
@@ -60,8 +58,7 @@ export default function LayoutComponent({ AuthContext }) {
   };
   const handleEventDelete = async (eventId) => {
     try {
-      const response = await axios.delete(`https://calendar-app-google-integrated.vercel.app/delete-event/${eventId}/${user.email}`,
-      { withCredentials: true }
+      const response = await axios.delete(`https://calendar-app-google-integrated.vercel.app/delete-event/${eventId}/${user.email}`
       );
       if(response.data.status=="ok"){
           setEvents((prevEvents) => prevEvents.filter(event => event.id !== eventId));

@@ -56,7 +56,7 @@ const app = express();
 app.use(
   cors({
     origin: [process.env.CLIENT_URL],
-        methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+    methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
@@ -223,9 +223,23 @@ app.get("/auth/logged_in", (req, res) => {
 });
 
 // Endpoint to log out
-app.post("/auth/logout", (_, res) => {
+app.post("/auth/logout/:email", auth, async (_, res) => {  // Add 'auth' middleware
   console.log("Logging out and clearing cookie...");
-  res.clearCookie("token").json({ message: "Logged out" });
+  
+  try {
+    // Assuming you have a way to get the user's email
+    const email = req.email; // Get email from the authenticated user
+
+    // Find the user and clear the refreshToken from the database
+    const dbUser = await User.findOne({ email });
+    dbUser.refreshToken = null;
+    await dbUser.save();
+
+    res.clearCookie("token").json({ message: "Logged out" });
+  } catch (err) {
+    console.error("Error in logout:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // Sample protected endpoint to fetch user posts
