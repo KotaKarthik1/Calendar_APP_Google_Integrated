@@ -223,12 +223,12 @@ app.get("/auth/logged_in", (req, res) => {
 });
 
 // Endpoint to log out
-app.post("/auth/logout/:email", auth, async (_, res) => {  // Add 'auth' middleware
+app.post("/auth/logout/:email", auth,  async (req, res) => {  // Add 'auth' middleware
   console.log("Logging out and clearing cookie...");
   
   try {
     // Assuming you have a way to get the user's email
-    const email = req.email; // Get email from the authenticated user
+    const email = req.params.email;; // Get email from the authenticated user
 
     // Find the user and clear the refreshToken from the database
     const dbUser = await User.findOne({ email });
