@@ -14,7 +14,7 @@ function Login() {
   };
   return (
     <div>
-      <h1>Login to Event Calender</h1>
+      <h1>Login to Event Calendar</h1>
       <GoogleButton
                 onClick={handleLogin}
                 className='google-login-btn'
