@@ -67,8 +67,9 @@ export default function Layout({ AuthContext }) {
   };
 
   const handleDateClick = (info) => {
-    const clickedDate = info.dateStr;
-    navigate('/eventform', { state: { selectedDate: clickedDate } });
+    // const clickedDate = info.dateStr;
+    // navigate('/eventform', { state: { selectedDate: clickedDate } });
+    navigate(`/eventform?date=${info.dateStr}`); 
   };
 
   const handleEventClick = (info) => {

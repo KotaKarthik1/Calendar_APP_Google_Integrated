@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./css/EventForm.css"; // Import the CSS file
 
-function EventForm({ AuthContext }) {
+function EventFormNoParams({ AuthContext }) {
   const { user } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,9 +18,7 @@ function EventForm({ AuthContext }) {
   const [eventCreated, setEventCreated] = useState(false); // State to track event creation
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const selectedDateFromQuery = searchParams.get("date");
-    if (selectedDateFromQuery) {
+    if (selectedDate) {
       const defaultStartTime = DateTime.fromISO(selectedDate)
         .set({ hour: 9, minute: 0 })
         .toISO({ includeOffset: false })
@@ -33,7 +31,7 @@ function EventForm({ AuthContext }) {
       setEventStart(defaultStartTime);
       setEventEnd(defaultEndTime);
     }
-  }, [location.search]);
+  }, [selectedDate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -128,4 +126,4 @@ function EventForm({ AuthContext }) {
   );
 }
 
-export default EventForm;
+export default EventFormNoParams;
