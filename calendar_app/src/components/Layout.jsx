@@ -9,66 +9,60 @@ import listPlugin from '@fullcalendar/list';
 import './css/Layout.css';
 import EventPopup from "./EventPopup";
 
-export default function LayoutComponent({ AuthContext }) {
+export default function Layout({ AuthContext }) {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const { checkLoginState, loggedIn, user } = useContext(AuthContext);
+  const { checkLoginState, loggedIn, user, resetLoginState } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (loggedIn === false) {
       navigate('/');
     }
-  }, [checkLoginState, loggedIn, navigate]);
+  }, [loggedIn, navigate]);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(`https://calendar-app-google-integrated.vercel.app/calendar-events/${user.email}`
-        );
+        const response = await axios.get(`https://calendar-app-google-integrated.vercel.app/calendar-events/${user.email}`);
         const formattedEvents = response.data.map(event => ({
           id: event.id,
           title: event.summary,
-          description:event.description,
+          description: event.description,
           start: event.start,
           end: event.end,
         }));
         setEvents(formattedEvents);
-        console.log(formattedEvents);
       } catch (error) {
-        console.error("get events:", error);
+        console.error("Error fetching events:", error);
       }
     };
 
     fetchEvents();
   }, [user.email]);
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
     if (window.confirm("Are you sure you want to logout?")) {
-      axios.post(`https://calendar-app-google-integrated.vercel.app/auth/logout/${user.email}`
-      )
-      .then(() => {
-        window.location.reload();
-      })
-      .catch(error => {
+      try {
+        await axios.post(`https://calendar-app-google-integrated.vercel.app/auth/logout/${user.email}`);
+        resetLoginState();
+        navigate('/');
+      } catch (error) {
         console.error("Logout error:", error);
-      });
+      }
     }
   };
+
   const handleEventDelete = async (eventId) => {
     try {
-      const response = await axios.delete(`https://calendar-app-google-integrated.vercel.app/delete-event/${eventId}/${user.email}`
-      );
-      if(response.data.status=="ok"){
-          setEvents((prevEvents) => prevEvents.filter(event => event.id !== eventId));
-        setShowPopup(false); // Close the popup after deleting
+      const response = await axios.delete(`https://calendar-app-google-integrated.vercel.app/delete-event/${eventId}/${user.email}`);
+      if (response.data.status === "ok") {
+        setEvents((prevEvents) => prevEvents.filter(event => event.id !== eventId));
+        setShowPopup(false);
       }
-      
-      
     } catch (error) {
       console.error("Error deleting event:", error);
-      // Handle errors (e.g., display an error message to the user)
     }
   };
 
@@ -85,7 +79,6 @@ export default function LayoutComponent({ AuthContext }) {
   return (
     <div>
       <h1>Event Calendar</h1>
-      
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginBottom: '10px' }}>
         <button 
           type="button" 
@@ -94,20 +87,13 @@ export default function LayoutComponent({ AuthContext }) {
         >
           Logout
         </button>
-        <button 
-          type="button" 
-          onClick={() => navigate('/eventform')}
-        >
+        <button type="button" onClick={() => navigate('/eventform')}>
           Add Event Manually
         </button>
-        <button 
-          type="button" 
-          onClick={() => navigate('/profile')}
-        >
+        <button type="button" onClick={() => navigate('/profile')}>
           Profile
         </button>
       </div>
-      
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
         headerToolbar={{
