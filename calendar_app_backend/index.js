@@ -283,6 +283,69 @@ app.post("/schedule-event/:email", auth, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+//get calendar events from specified date
+app.get("/calendar-events/:email", auth, async (req, res) => {
+  try {
+    const calendar = google.calendar({ version: "v3" });
+    const email = req.params.email;
+    let dbuser = await User.findOne({ email });
+    const DBRefreshToekn = dbuser.refreshToken;
+    oauth2Client.setCredentials({ refresh_token: DBRefreshToekn });
+    const response = await calendar.events.list({
+      auth: oauth2Client,
+      calendarId: "primary",
+      timeMin: new Date().toISOString(),
+      maxResults: 10,
+      singleEvents: true,
+      orderBy: "startTime",
+    });
+    const events = response.data.items;
+    const filteredEvents = events.map((event) => ({
+      id: event.id,
+      summary: event.summary,
+      description: event.description,
+      start: event.start.dateTime, // Or event.start.date if it's an all-day event
+      end: event.end.dateTime, // Or event.end.date if it's an all-day event
+    }));
+    console.log(filteredEvents);
+    res.json(filteredEvents);
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    if (err.code === 401) {
+      return res.status(401).json({ message: "Token expired" });
+    }
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.delete("/delete-event/:eventId/:email", auth, async (req, res) => {
+  try {
+    const { eventId, email } = req.params;
+    console.log("Deleting event with ID:", eventId);
+
+    const dbUser = await User.findOne({ email });
+    const DBRefreshToekn = dbUser.refreshToken;
+
+    oauth2Client.setCredentials({ refresh_token: DBRefreshToekn });
+    const calendar = google.calendar({ version: "v3" });
+
+    const event = await calendar.events.delete({
+      calendarId: "primary",
+      auth: oauth2Client,
+      eventId,
+    });
+    // Remove from DB
+    const eventIndex = dbUser.events.findIndex((e) => e.id === eventId);
+    if (eventIndex > -1) {
+      dbUser.events.splice(eventIndex, 1);
+      await dbUser.save();
+    }
+    res.status(200).json({ status: "ok" });
+  } catch (err) {
+    console.error("Error deleting event:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 // Start the server
 const port = process.env.PORT || 3001;
