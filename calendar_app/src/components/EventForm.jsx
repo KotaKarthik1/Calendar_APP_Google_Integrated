@@ -2,106 +2,126 @@ import React, { useState, useContext, useEffect } from "react";
 import axios from "redaxios";
 import { DateTime } from "luxon";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./css/EventForm.css";
+import "./css/EventForm.css"; // Import the CSS file
 
 function EventForm({ AuthContext }) {
-  // Get the current user from the authentication context
   const { user } = useContext(AuthContext);
-
-  // Get the location object to access passed state
   const location = useLocation();
-
-  // Get the navigation function for redirection
   const navigate = useNavigate();
-
-  // Extract the selected date from the location state
   const { selectedDate } = location.state || {};
-  console.log('Selected Date:', selectedDate); 
+  console.log('Selected Date:', selectedDate);  // Debugging log
 
-  // State variables for form input values
   const [eventTitle, setEventTitle] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [eventStart, setEventStart] = useState("");
   const [eventEnd, setEventEnd] = useState("");
-  const [eventCreated, setEventCreated] = useState(false);
+  const [eventCreated, setEventCreated] = useState(false); // State to track event creation
 
-  // Initialize event start and end times based on the selected date
   useEffect(() => {
     if (selectedDate) {
-      // Calculate default start and end times
       const defaultStartTime = DateTime.fromISO(selectedDate)
-        .set({ hour: 9, minute: 0 }) // 9:00 AM
+        .set({ hour: 9, minute: 0 })
         .toISO({ includeOffset: false })
-        .replace(/\.\d{3}Z$/, ""); // Remove milliseconds and 'Z'
+        .replace(/\.\d{3}Z$/, "");
       const defaultEndTime = DateTime.fromISO(selectedDate)
-        .set({ hour: 18, minute: 0 }) // 6:00 PM
+        .set({ hour: 18, minute: 0 })
         .toISO({ includeOffset: false })
         .replace(/\.\d{3}Z$/, "");
 
       setEventStart(defaultStartTime);
       setEventEnd(defaultEndTime);
     }
-  }, [selectedDate]); // Run only when selectedDate changes
+  }, [selectedDate]);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-
+    e.preventDefault();
     try {
-      // Prepare the request body for the new event
       const requestBody = {
         summary: eventTitle || "New Event",
         description: eventDescription || "",
         start: {
-          dateTime: DateTime.fromISO(eventStart).toISO(), // Convert to ISO string
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Get user's timezone
+          dateTime: DateTime.fromISO(eventStart).toISO(),
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
         end: {
-          dateTime: DateTime.fromISO(eventEnd).toISO(), // Convert to ISO string
+          dateTime: DateTime.fromISO(eventEnd).toISO(),
           timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
       };
 
-      // Send the event creation request to the backend
       const response = await axios.post(
         `https://calendar-app-google-integrated.vercel.app/schedule-event/${user.email}`,
         requestBody,
-        { withCredentials: true } 
+        { withCredentials: true }
       );
 
       console.log("Event added successfully:", response.data);
-
-      // Show a success message (you can replace this with better UI feedback)
-      setEventCreated(true);
-      // Redirect back to the calendar or home page
+      setEventCreated(true); // Set eventCreated to true when event is added successfully
       setTimeout(() => {
         navigate("/");
-      }, 2000); // Redirect after 2 seconds (adjust the delay as needed)
+      }, 2000); // Redirect after 2 seconds
     } catch (error) {
-      // Handle errors, including token expiration
       console.error("Error adding event:", error);
       if (
         error.response &&
         error.response.status === 401 &&
         error.response.data.message === "Token expired"
       ) {
-        navigate("/"); // Redirect to login on token expiration
+        navigate("/");
+        return;
       }
-      // Handle other types of errors here...
     }
   };
 
   return (
-    // Event form JSX with added comments
     <div className="event-form-container">
       <h2>Create New Event</h2>
       <form onSubmit={handleSubmit}>
-        {/* ... your form fields for title, description, start, end ... */}
-      </form>
+        <div className="form-group">
+          <label htmlFor="eventTitle">Title:</label>
+          <input
+            type="text"
+            id="eventTitle"
+            value={eventTitle}
+            onChange={(e) => setEventTitle(e.target.value)}
+            required
+          />
+        </div>
 
-      {eventCreated && (
-        <p className="success-message">Event created successfully!</p>
-      )} 
+        <div className="form-group">
+          <label htmlFor="eventDescription">Description:</label>
+          <textarea
+            id="eventDescription"
+            value={eventDescription}
+            onChange={(e) => setEventDescription(e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="eventStart">Start Date and Time:</label>
+          <input
+            type="datetime-local"
+            id="eventStart"
+            value={eventStart}
+            onChange={(e) => setEventStart(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="eventEnd">End Date and Time:</label>
+          <input
+            type="datetime-local"
+            id="eventEnd"
+            value={eventEnd}
+            onChange={(e) => setEventEnd(e.target.value)}
+            required
+          />
+        </div>
+
+        <button type="submit">Create Event</button>
+      </form>
+      {eventCreated && <p className="success-message">Event created successfully!</p>} {/* Success message */}
     </div>
   );
 }
