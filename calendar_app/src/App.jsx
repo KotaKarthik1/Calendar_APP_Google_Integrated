@@ -6,7 +6,6 @@ import Layout from './components/Layout'
 import Callback from './components/Callback'
 import Profile from './components/Profile'
 import EventForm from './components/EventForm'
-import EventFormNoParams from './components/EventFormNoParams'
 
 // Ensures cookie is sent
 axios.defaults.withCredentials = true
@@ -62,12 +61,11 @@ const router = createBrowserRouter([
     element: <Profile AuthContext={AuthContext}/>
   },
   {
-    path:'/eventform/*',
+    path:'/eventform',
     element: <EventForm AuthContext={AuthContext}/>
   },
   {
-      path:'/eventform',
-      element: <EventFormNoParams AuthContext={AuthContext}/>
+    
   }
 ])
 
