@@ -51,7 +51,8 @@ console.log("Starting server with config:", config);
 
 // Create Express application
 const app = express();
-
+console.log("client url is ",process.env.CLIENT_URL);
+console.log("redirect url is ",process.env.REDIRECT_URL);
 // Resolve CORS with credentials support
 app.use(
   cors({
