@@ -53,7 +53,7 @@ function EventPopup({ events, onClose, onDelete }) {
           {events.map((event, index) => (
             <li key={index} style={{ marginBottom: "8px" }}>
               {/* Event title */}
-              <b style={{ fontWeight: "bold" }}>{event.title}</b> -{" "}
+              <b style={{ fontWeight: "bold",color: "white" }}>{event.title}</b> -{" "}
               
               {/* Event description (if available) */}
               {event.extendedProps && event.extendedProps.description && (
