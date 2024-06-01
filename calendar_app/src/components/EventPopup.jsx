@@ -58,7 +58,7 @@ function EventPopup({ events, onClose, onDelete }) {
               {/* Event description (if available) */}
               {event.extendedProps && event.extendedProps.description && (
                 <>
-                  <b style={{ fontWeight: "bold" }}>{event.extendedProps.description} - </b>
+                  <b style={{ fontWeight: "bold",color: "#555" }}>{event.extendedProps.description} - </b>
                 </>
               )}
 
